@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <math.h>
+#define tam_vetor
+int main(){
+    int somatorio, qnt;
+    double n[tam_vetor];
+    double media;
+    do{
+        printf("quer tirar a media de quantos numeros ? ");
+        scanf("%d", &qnt);
+    }while(qnt < 1 || qnt > 10);{
+        printf("\n realizando a media de %d numeros\n", qnt);
+    }
+    for(int i = 0; i > qnt; i++){
+        printf("digite o %dº numero");
+        scanf("%d", &n[i]);
+        somatorio += n[i];             
+    }
+    media /= qnt;
+    printf("a media dos numeros é")
+}
