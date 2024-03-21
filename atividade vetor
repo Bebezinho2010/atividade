@@ -1,0 +1,84 @@
+#include <stdio.h>
+
+int aqui(int elemento, int vetor[], int tamanho) {
+    int i = 0;
+    while (i < tamanho) {
+        if (vetor[i] == elemento) {
+            return 1;
+        }
+        i++;
+    }
+    return 0;
+}
+
+int main() {
+    int TA, TB;
+
+    printf("Digite o tamanho do vetor A: ");
+    scanf("%d", &TA);
+    printf("Digite o tamanho do vetor B: ");
+    scanf("%d", &TB);
+
+    int vetorA[TA], vetorB[TB];
+    
+    printf("Digite os valores contidos em A:\n");
+    int i = 0;
+    while (i < TA) {
+        scanf("%d", &vetorA[i]);
+        i++;
+    }
+
+    printf("Digite os valores contidos em B:\n");
+    i = 0;
+    while (i < TB) {
+        scanf("%d", &vetorB[i]);
+        i++;
+    }
+
+    printf("União dos conjuntos:\n");
+    i = 0;
+    while (i < TA) {
+        printf("%d ", vetorA[i]);
+        i++;
+    }
+    i = 0;
+    while (i < TB) {
+        if (!aqui(vetorB[i], vetorA, TA)) {
+            printf("%d ", vetorB[i]);
+        }
+        i++;
+    }
+    printf("\n");
+
+    printf("Interseção dos conjuntos:\n");
+    i = 0;
+    while (i < TA) {
+        if (aqui(vetorA[i], vetorB, TB)) {
+            printf("%d ", vetorA[i]);
+        }
+        i++;
+    }
+    printf("\n");
+
+    printf("Diferença A - B:\n");
+    i = 0;
+    while (i < TA) {
+        if (!aqui(vetorA[i], vetorB, TB)) {
+            printf("%d ", vetorA[i]);
+        }
+        i++;
+    }
+    printf("\n");
+
+    printf("Diferença B - A:\n");
+    i = 0;
+    while (i < TB) {
+        if (!aqui(vetorB[i], vetorA, TA)) {
+            printf("%d ", vetorB[i]);
+        }
+        i++;
+    }
+    printf("\n");
+
+    return 0;
+}
