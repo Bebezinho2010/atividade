@@ -1,0 +1,104 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <time.h>
+
+#define LINHAS 10
+#define COLUNAS 10
+
+void imprimirMatriz(int matriz[][COLUNAS], int linhas, int colunas);
+void imprimirVetor(int vetor[], int tamanho);
+void preencherMatriz(int matriz[][COLUNAS], int linhas, int colunas);
+void preencherMatrizAleatoria(int matriz[][COLUNAS], int linhas, int colunas);
+void subtotal(int matriz[][COLUNAS], int linhas, int colunas, int vetorSubtotais[]);
+
+int main() {
+  int linhas, colunas;
+  int matriz[LINHAS][COLUNAS];
+  int vetorSubtotais[COLUNAS];
+
+  srand(time(NULL));
+
+  do {
+    printf("Qual a quantidade de linhas? (valor entre 1 e %d): ", LINHAS);
+    scanf("%d", &linhas);
+  } while (linhas < 1 || linhas > LINHAS);
+
+  do {
+    printf("Qual a quantidade de colunas? (valor entre 1 e %d): ", COLUNAS);
+    scanf("%d", &colunas);
+  } while (colunas < 1 || colunas > COLUNAS);
+
+  preencherMatriz(matriz, linhas, colunas);
+  subtotal(matriz, linhas, colunas, vetorSubtotais);
+  imprimirMatriz(matriz, linhas, colunas);
+  printf("\nVetor de subtotais:\n");
+  imprimirVetor(vetorSubtotais, colunas);
+
+  return 0;
+}
+
+void imprimirMatriz(int matriz[][COLUNAS], int linhas, int colunas) {
+  int i = 0;
+  while (i < linhas) {
+    int j = 0;
+    while (j < colunas) {
+      printf("%4d ", matriz[i][j]);
+      j++;
+    }
+    printf("\n");
+    i++;
+  }
+}
+
+void imprimirVetor(int vetor[], int tamanho) {
+  printf("[");
+  int i = 0;
+  while (i < tamanho) {
+    printf("%d", vetor[i]);
+    if (i < tamanho - 1) {
+      printf(", ");
+    }
+    i++;
+  }
+  printf("]\n");
+}
+
+void preencherMatriz(int matriz[][COLUNAS], int linhas, int colunas) {
+  printf("Digite os valores para preencher a matriz\n");
+  int i = 0;
+  while (i < linhas) {
+    int j = 0;
+    while (j < colunas) {
+      printf("matriz[%d][%d] = ", i + 1, j + 1);
+      scanf("%d", &matriz[i][j]);
+      j++;
+    }
+    i++;
+  }
+}
+
+void preencherMatrizAleatoria(int matriz[][COLUNAS], int linhas, int colunas) {
+  int i = 0;
+  while (i < linhas) {
+    int j = 0;
+    while (j < colunas) {
+      matriz[i][j] = rand() % (2 * linhas * colunas) + 1;
+      j++;
+    }
+    i++;
+  }
+}
+
+void subtotal(int matriz[][COLUNAS], int linhas, int colunas, int vetorSubtotais[]) {
+  int j = 0;
+  while (j < colunas) {
+    vetorSubtotais[j] = 0;
+    int i = 0;
+    while (i < linhas) {
+      vetorSubtotais[j] += matriz[i][j];
+      i++;
+    }
+    j++;
+  }
+}
