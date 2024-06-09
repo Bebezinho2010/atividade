@@ -1,0 +1,213 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define TAM_MAX_PLYLST 200
+#define TAM_NOME 50
+#define TAM_LOGIN 15
+#define TAM_SENHA 15
+#define TAM_PLAYLIST 100
+#define TAM_TITULO 50
+#define TAM_MUSICAS 100
+
+typedef struct {
+    int codigo;
+    char titulo[TAM_TITULO];
+    char artista[TAM_NOME];
+} Musica;
+
+typedef struct {
+    int codigo;
+    int codUsuario;
+    char titulo[TAM_TITULO];
+    int qtdMusicas;
+    int musicas[TAM_MUSICAS];
+} Playlist;
+
+typedef struct {
+    int codigo;
+    char nome[TAM_NOME];
+    char login[TAM_LOGIN];
+    char senha[TAM_SENHA];
+    int qtdPlaylists;
+    Playlist playlists[TAM_PLAYLIST];
+    int qtdPlaylistsFav;
+    int playlistsFav[TAM_PLAYLIST];
+} Usuario;
+
+Usuario usuarios[TAM_MAX_PLYLST];
+Musica musicas[TAM_MUSICAS];
+int qtdUsuarios = 0;
+int qtdMusicas = 0;
+
+void menuAdministrador();
+void menuUsuario(int usuarioIndex);
+void loginAdministrador();
+void loginUsuario();
+void cadastroUsuario();
+void listarUsuarios();
+void listarMusicas();
+void cadastrarMusica();
+
+int main() {
+    int opcao;
+    do {
+        printf("1. Administrador\n");
+        printf("2. Usuário\n");
+        printf("3. Sair\n");
+        printf("Escolha a opção: ");
+        scanf("%d", &opcao);
+        getchar();
+
+        switch (opcao) {
+            case 1: loginAdministrador(); break;
+            case 2: loginUsuario(); break;
+            case 3: printf("Saindo...\n"); break;
+            default: printf("Opção inválida! Tente novamente.\n");
+        }
+    } while (opcao != 3);
+    return 0;
+}
+
+void loginAdministrador() {
+    char senha[TAM_SENHA];
+    printf("Digite a senha do administrador: ");
+    fgets(senha, TAM_SENHA, stdin);
+    senha[strcspn(senha, "\n")] = 0;
+    if (strcmp(senha, "m@st3r2024") == 0) menuAdministrador();
+    else printf("Senha incorreta!\n");
+}
+
+void loginUsuario() {
+    char login[TAM_LOGIN], senha[TAM_SENHA];
+    int usuarioIndex = -1;
+
+    printf("1. Login\n2. Cadastro\nEscolha a opção: ");
+    int opcao;
+    scanf("%d", &opcao);
+    getchar();
+
+    if (opcao == 1) {
+        printf("Login: ");
+        fgets(login, TAM_LOGIN, stdin);
+        login[strcspn(login, "\n")] = 0;
+
+        printf("Senha: ");
+        fgets(senha, TAM_SENHA, stdin);
+        senha[strcspn(senha, "\n")] = 0;
+
+        for (int i = 0; i < qtdUsuarios; i++) {
+            if (strcmp(usuarios[i].login, login) == 0 && strcmp(usuarios[i].senha, senha) == 0) {
+                usuarioIndex = i;
+                break;
+            }
+        }
+
+        if (usuarioIndex == -1) printf("Login ou senha incorretos!\n");
+        else menuUsuario(usuarioIndex);
+    } else if (opcao == 2) {
+        cadastroUsuario();
+    } else {
+        printf("Opção inválida!\n");
+    }
+}
+
+void cadastroUsuario() {
+    Usuario novoUsuario;
+    novoUsuario.codigo = qtdUsuarios + 1;
+
+    printf("Nome: ");
+    fgets(novoUsuario.nome, TAM_NOME, stdin);
+    novoUsuario.nome[strcspn(novoUsuario.nome, "\n")] = 0;
+
+    printf("Login: ");
+    fgets(novoUsuario.login, TAM_LOGIN, stdin);
+    novoUsuario.login[strcspn(novoUsuario.login, "\n")] = 0;
+
+    char senha[TAM_SENHA], confirmacaoSenha[TAM_SENHA];
+    do {
+        printf("Senha: ");
+        fgets(senha, TAM_SENHA, stdin);
+        senha[strcspn(senha, "\n")] = 0;
+
+        printf("Confirme a senha: ");
+        fgets(confirmacaoSenha, TAM_SENHA, stdin);
+        confirmacaoSenha[strcspn(confirmacaoSenha, "\n")] = 0;
+
+        if (strcmp(senha, confirmacaoSenha) != 0) {
+            printf("As senhas não correspondem. Tente novamente.\n");
+        }
+    } while (strcmp(senha, confirmacaoSenha) != 0);
+
+    strcpy(novoUsuario.senha, senha);
+    novoUsuario.qtdPlaylists = 0;
+    novoUsuario.qtdPlaylistsFav = 0;
+
+    usuarios[qtdUsuarios++] = novoUsuario;
+    printf("Usuário cadastrado com sucesso!\n");
+}
+
+void menuAdministrador() {
+    int opcao;
+    do {
+        printf("1. Listar usuários\n2. Cadastrar novas músicas\n3. Listar todas as músicas\n4. Voltar ao menu principal\nEscolha a opção: ");
+        scanf("%d", &opcao);
+        getchar();
+
+        switch (opcao) {
+            case 1: listarUsuarios(); break;
+            case 2: cadastrarMusica(); break;
+            case 3: listarMusicas(); break;
+            case 4: printf("Voltando ao menu principal...\n"); break;
+            default: printf("Opção inválida! Tente novamente.\n");
+        }
+    } while (opcao != 4);
+}
+
+void menuUsuario(int usuarioIndex) {
+    int opcao;
+    do {
+        printf("1. Listar seus dados\n2. Listar todas as músicas\n3. Sair\nEscolha a opção: ");
+        scanf("%d", &opcao);
+        getchar();
+
+        switch (opcao) {
+            case 1: listarUsuarios(); break;
+            case 2: listarMusicas(); break;
+            case 3: printf("Saindo...\n"); break;
+            default: printf("Opção inválida! Tente novamente.\n");
+        }
+    } while (opcao != 3);
+}
+
+void listarUsuarios() {
+    for (int i = 0; i < qtdUsuarios; i++) {
+        printf("Código: %d, Nome: %s, Login: %s, Playlists: %d, Playlists Favoritadas: %d\n", 
+               usuarios[i].codigo, usuarios[i].nome, usuarios[i].login, 
+               usuarios[i].qtdPlaylists, usuarios[i].qtdPlaylistsFav);
+    }
+}
+
+void listarMusicas() {
+    for (int i = 0; i < qtdMusicas; i++) {
+        printf("Código: %d, Título: %s, Artista: %s\n", 
+               musicas[i].codigo, musicas[i].titulo, musicas[i].artista);
+    }
+}
+
+void cadastrarMusica() {
+    Musica novaMusica;
+    novaMusica.codigo = qtdMusicas + 1;
+
+    printf("Título da música: ");
+    fgets(novaMusica.titulo, TAM_TITULO, stdin);
+    novaMusica.titulo[strcspn(novaMusica.titulo, "\n")] = 0;
+
+    printf("Nome do artista: ");
+    fgets(novaMusica.artista, TAM_NOME, stdin);
+    novaMusica.artista[strcspn(novaMusica.artista, "\n")] = 0;
+
+    musicas[qtdMusicas++] = novaMusica;
+    printf("Música cadastrada com sucesso!\n");
+}
